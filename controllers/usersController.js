@@ -3,7 +3,7 @@ module.exports.regiter = async function (req, res) {
   if (req.body.password != req.body.confirmPassword) {
     console.log("password and confirm_password are not same");
     req.flash("error", "Password and Confirm Password are not same");
-    return res.redirect("back");
+    res.status(400).send("Password and Confirm Password are not same");
   }
 
   // check if user already exists
@@ -29,7 +29,7 @@ module.exports.regiter = async function (req, res) {
         console.log("New user created!");
         req.flash("success", "New User Created");
         signupMailer.signupWelcome(newUser);
-        return res.redirect("back");
+        res.status(201).send('User registered successfully');
       } catch (err) {
         console.error(err);
         req.flash("error", "Error Creating User");
@@ -39,7 +39,7 @@ module.exports.regiter = async function (req, res) {
   } else {
     console.log("User already exists!");
     req.flash("info", "User already exists!");
-    return res.redirect("/authentication");
+    res.status(400).send("User already exists!");
   }
 };
 
@@ -47,15 +47,11 @@ module.exports.createSession = function (req, res) {
   if (req.isAuthenticated()) {
     req.flash("success", "Logged in Successfully");
     // send json response
-    return res.status(200).json({
-      message: "Logged in Successfully",
-    });
+    return res.status(200).send("Logged in Successfully");
   }
   req.flash("error", "Invalid Username/Password");
   // send json response
-  return res.status(401).json({
-    message: "Invalid Username/Password",
-  });
+  return res.status(401).send("Invalid Username/Password");
 };
 
 module.exports.destroySession = function (req, res) {
@@ -64,14 +60,10 @@ module.exports.destroySession = function (req, res) {
     if (error) {
       req.flash("error", "Something went wrong!");
       // send json response
-      return res.status(500).json({
-        message: "Something went wrong!",
-      });
+      return res.status(500).send("Something went wrong!");
     }
   });
   req.flash("success", "Successfully logged out");
   // send json response
-  return res.status(200).json({
-    message: "Successfully logged out",
-  });
+  return res.status(200).send("Successfully logged out");
 };

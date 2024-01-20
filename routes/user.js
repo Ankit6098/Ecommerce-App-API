@@ -4,7 +4,7 @@ const router = express.Router();
 const usersController = require("../controllers/usersController");
 const passport = require("../config/passport-local-strategy");
 
-router.post("/register-user", usersController.registerUser);
+router.post("/register-user", usersController.regiter);
 router.post(
   "/create-session",
   passport.authenticate("local", { failureRedirect: "/" }),
