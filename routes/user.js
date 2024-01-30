@@ -4,10 +4,10 @@ const router = express.Router();
 const usersController = require("../controllers/usersController");
 const passport = require("../config/passport-local-strategy");
 
-router.post("/register-user", usersController.regiter);
+router.post("/register-user", usersController.registerUser);
 router.post(
   "/create-session",
-  passport.authenticate("local", { failureRedirect: "/" }),
+  passport.authenticate("local", { successRedirect: "http://localhost:5173/", failureRedirect: "http://localhost:5173/login" }),
   usersController.createSession
 );
 
@@ -19,7 +19,7 @@ router.get(
 );
 router.get(
   "/oauth2callback",
-  passport.authenticate("google", { failureRedirect: "/" }),
+  passport.authenticate("google", { successRedirect: "http://localhost:5173/", failureRedirect: "http://localhost:5173/login" }),
   usersController.createSession
 );
 
@@ -32,5 +32,7 @@ router.get(
   passport.authenticate("github", { failureRedirect: "/" }),
   usersController.createSession
 );
+
+router.get("/get-user", usersController.getUser);
 
 module.exports = router;

@@ -1,4 +1,9 @@
-module.exports.regiter = async function (req, res) {
+const User = require("../models/user");
+const bcrypt = require("bcrypt");
+const signupMailer = require("../mailers/signup_mailer");
+
+module.exports.registerUser = async function (req, res) {
+  console.log(req.body);
   // check if password and confirm_password are same
   if (req.body.password != req.body.confirmPassword) {
     console.log("password and confirm_password are not same");
@@ -67,3 +72,15 @@ module.exports.destroySession = function (req, res) {
   // send json response
   return res.status(200).send("Successfully logged out");
 };
+
+module.exports.getUser = async function (req, res) {
+  if (req.user) {
+    console.log("User found!");
+    // send json response
+    return res.status(200).json(req.user);
+  } else {
+    console.log("User not found!");
+    // send json response
+    return res.status(404).send("User not found!");
+  }
+}

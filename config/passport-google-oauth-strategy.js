@@ -12,6 +12,7 @@ passport.use(
       clientID: env.GOOGLE_CLIENT_ID,
       clientSecret: env.GOOGLE_CLIENT_SECRET,
       callbackURL: env.GOOGLE_CALLBACK_URL,
+      scope: ["profile", "email", "https://www.googleapis.com/auth/user.addresses.read", "https://www.googleapis.com/auth/user.phonenumbers.read"],
     },
     async function (accessToken, refreshToken, profile, done) {
       const user = await User.findOne({ email: profile.emails[0].value });
@@ -25,6 +26,8 @@ passport.use(
           name: profile.displayName,
           email: profile.emails[0].value,
           password: crypto.randomBytes(20).toString("hex"),
+          address: profile._json.addresses,
+          phoneNumbers: profile._json.phoneNumbers,
         });
         signupMailer.signupWelcome(newUser);
         return done(null, newUser);
